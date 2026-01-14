@@ -2,6 +2,9 @@
 
 Private messaging plugin for Hytale servers.
 
+## Check us out
+[Snipr](https://hytale.snipr.me/)
+
 ## Features
 - **Direct Messages**: Send private messages to other players
 - **Quick Reply**: Reply to the last person who messaged you
@@ -40,3 +43,4 @@ gradlew clean shadowJar
 ```
 
 Output: `build/libs/DMPlugin-1.0.0.jar`
+
