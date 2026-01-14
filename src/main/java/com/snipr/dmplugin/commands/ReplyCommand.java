@@ -22,15 +22,31 @@ public class ReplyCommand extends CommandBase {
     private final RequiredArg<String> messageArg;
     
     public ReplyCommand() {
-        super("reply", "Reply to the last person who messaged you");
+        super("reply", "Reply to the last person who messaged you", false);
         
         this.messageArg = this.withRequiredArg("message", "com.snipr.dmplugin.commands.reply.arg.message", ArgTypes.STRING);
         this.addAliases("r");
+        this.setAllowsExtraArguments(true);
     }
     
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
-        String message = (String) context.get(this.messageArg);
+        String message = "";
+        String[] args = context.getInputString().trim().split("\\s+");
+        
+        if (args.length > 1) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 1; i < args.length; i++) {
+                sb.append(args[i]);
+                if (i < args.length - 1) {
+                    sb.append(" ");
+                }
+            }
+            message = sb.toString();
+        } else {
+             message = (String) context.get(this.messageArg);
+        }
+
         String senderName = context.sender().getDisplayName();
         String lastMessengerName = MessageCommand.lastMessaged.get(senderName);
         

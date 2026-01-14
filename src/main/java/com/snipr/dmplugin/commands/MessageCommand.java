@@ -28,19 +28,36 @@ public class MessageCommand extends CommandBase {
     public static final Map<String, String> lastMessaged = new HashMap<>();
     
     public MessageCommand() {
-        super("msg", "Send a private message to a player");
+        super("msg", "Send a private message to a player", false);
         
         this.playerArg = this.withRequiredArg("player", "com.snipr.dmplugin.commands.msg.arg.player", ArgTypes.PLAYER_REF);
         this.messageArg = this.withRequiredArg("message", "com.snipr.dmplugin.commands.msg.arg.message", ArgTypes.STRING);
         
         this.addAliases("dm", "tell", "whisper", "w");
+        this.setAllowsExtraArguments(true);
     }
     
     @Override
     protected void executeSync(@Nonnull CommandContext context) {
         PlayerRef target = (PlayerRef) context.get(this.playerArg);
-        String message = (String) context.get(this.messageArg);
         
+        String msg = "";
+        String[] args = context.getInputString().trim().split("\\s+");
+        
+        if (args.length > 2) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 2; i < args.length; i++) {
+                sb.append(args[i]);
+                if (i < args.length - 1) {
+                    sb.append(" ");
+                }
+            }
+            msg = sb.toString();
+        } else {
+            msg = (String) context.get(this.messageArg);
+        }
+        
+        final String message = msg;
         String senderName = context.sender().getDisplayName();
         
         if (target.getUsername().equals(senderName)) {
